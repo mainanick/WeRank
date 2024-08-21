@@ -3,22 +3,11 @@ package main
 import (
 	"fmt"
 	"log"
-	"log/slog"
-	"net/http"
 	"os"
 
-	"github.com/go-chi/chi/v5"
+	werank "github.com/mainanick/WeRank"
 	"github.com/urfave/cli/v2"
 )
-
-func serve() error {
-	r := chi.NewRouter()
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("root."))
-	})
-
-	return http.ListenAndServe(":3333", r)
-}
 
 var (
 	Digital = `
@@ -49,11 +38,10 @@ func main() {
 					},
 				},
 				Action: func(cCtx *cli.Context) error {
-					if cCtx.Bool("debug") {
-						slog.SetLogLoggerLevel(slog.LevelDebug)
+					config := &werank.Config{
+						Debug: cCtx.Bool("debug"),
 					}
-					slog.Debug("starting server")
-					return serve()
+					return werank.Run(config)
 				},
 			},
 		},
