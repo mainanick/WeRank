@@ -7,6 +7,10 @@ import (
 	"github.com/sethvargo/go-envconfig"
 )
 
+var (
+	AppConfig *Config
+)
+
 type DataForSEOConfig struct {
 	Username string `env:"DATAFORSEO_USERNAME,required"`
 	Password string `env:"DATAFORSEO_PASSWORD,required"`
@@ -25,5 +29,10 @@ func Load() *Config {
 	if err := envconfig.Process(context.TODO(), &c); err != nil {
 		log.Fatalf("Failed to load env: %s", err)
 	}
+	AppConfig = &c
 	return &c
+}
+
+func Get() *Config {
+	return AppConfig
 }

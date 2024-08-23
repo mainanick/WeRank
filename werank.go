@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"time"
@@ -22,48 +21,27 @@ import (
 	"github.com/go-chi/cors"
 )
 
-var (
-	Digital = `
- +-+-+-+-+-+-+
- |W|e|R|a|n|k|
- +-+-+-+-+-+-+
-`
-
-	Help = ""
-)
-
 func main() {
-	app := &cli.App{
-		Name:  "WeRank",
-		Usage: "Rank High",
-		Action: func(*cli.Context) error {
-			fmt.Println(Digital + "\n\n" + Help)
-			return nil
-		},
-		Commands: []*cli.Command{
-			{
-				Name: "start",
-				Flags: []cli.Flag{
-					&cli.BoolFlag{
-						Name:    "debug",
-						Aliases: []string{"d"},
-						EnvVars: []string{"WERANK_DEBUG"},
-					},
-				},
-				Action: func(cCtx *cli.Context) error {
-					envConfig := config.Load()
-					if cCtx.Bool("debug") {
-						envConfig.Debug = cCtx.Bool("debug")
-					}
-
-					return Run(envConfig)
-				},
-			},
-		},
-
-		EnableBashCompletion: true,
-		Suggest:              true,
+	app := cli.NewApp()
+	app.Name = "WeRank"
+	app.Usage = "Rank High"
+	app.Action = func(cCtx *cli.Context) error {
+		envConfig := config.Load()
+		if cCtx.Bool("debug") {
+			envConfig.Debug = cCtx.Bool("debug")
+		}
+		return Run(envConfig)
 	}
+	app.Flags = []cli.Flag{
+		&cli.BoolFlag{
+			Name:    "debug",
+			Aliases: []string{"d"},
+			EnvVars: []string{"WERANK_DEBUG"},
+		},
+	}
+
+	app.EnableBashCompletion = true
+	app.Suggest = true
 
 	if err := app.Run(os.Args); err != nil {
 		log.Fatal(err)
