@@ -6,19 +6,21 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/mainanick/WeRank/config"
+	"github.com/go-chi/render"
+	"github.com/mainanick/WeRank/internal/config"
+	"github.com/mainanick/WeRank/pkg/binding"
 	"github.com/mainanick/dataforseo"
 )
 
 func V1APIRouter(c *config.Config) chi.Router {
 	r := chi.NewRouter()
-	r.Get("/keywords", KeywordHandler)
+	r.Post("/keywords", KeywordHandler)
 
 	return r
 }
 
 func DataForSEOClient(c *config.Config) *dataforseo.Client {
-	dataforseo.DefaultBaseURL = "https://sandbox.dataforseo.com/v3/"
+	// dataforseo.DefaultBaseURL = "https://sandbox.dataforseo.com/v3/"
 	client := dataforseo.NewClient(nil).WithAuthToken(c.DataForSEO.Username, c.DataForSEO.Password)
 	return client
 }
@@ -34,23 +36,38 @@ type KeywordForKeywordRequest struct {
 	SortBy               string   `json:"sort_by,omitempty"`
 }
 
+type KeywordForKeywordResponse struct {
+	Results []dataforseo.SiteKeywordResult `json:"results,omitempty"`
+}
+
 func KeywordHandler(w http.ResponseWriter, r *http.Request) {
 	c := config.Get()
 	client := DataForSEOClient(c)
-	keywords, err := client.Keyword.KeywordsForKeywords(context.TODO(), dataforseo.KeywordForKeywordRequest{
-		Keywords:     []string{"github.com"},
-		LocationName: "United States",
-	})
 
+	body := &KeywordForKeywordRequest{}
+	if err := binding.ShouldBindJSON(r.Body, body); err != nil {
+		slog.Error("Error Binding JSON ", err)
+		render.Status(r, http.StatusBadRequest)
+		render.JSON(w, r, err)
+		return
+	}
+
+	d := dataforseo.KeywordForKeywordRequest{
+		Keywords:     body.Keywords,
+		LocationName: body.LocationName,
+	}
+	if body.DateFrom != "" {
+		d.DateFrom = body.DateFrom
+	}
+	keywords, err := client.Keyword.KeywordsForKeywords(context.TODO(), d)
 	if err != nil {
 		slog.Error("DataForSEO Client Error: ", err)
 	}
-
+	res := &KeywordForKeywordResponse{}
 	for _, t := range keywords.Tasks {
-		for _, i := range t.Result {
-			slog.Debug(i.Keyword)
-		}
-
+		res.Results = t.Result
 	}
-	w.Write([]byte("api."))
+
+	render.Status(r, http.StatusOK)
+	render.JSON(w, r, res)
 }

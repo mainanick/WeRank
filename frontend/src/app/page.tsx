@@ -2,6 +2,16 @@
 
 import { Button } from "@/components/ui/button";
 import {
+  ColumnDef,
+  createColumnHelper,
+  flexRender,
+  getCoreRowModel,
+  getSortedRowModel,
+  SortingFn,
+  SortingState,
+  useReactTable,
+} from '@tanstack/react-table'
+import {
   Card,
   CardContent,
   CardDescription,
@@ -10,23 +20,31 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { KeywordRequest, keywords } from "@/lib/api";
-import { FormEvent, useState } from "react";
+import { API, KeywordRequest } from "@/lib/api";
+import { FormEvent, useMemo, useState } from "react";
+import { KeywordResult } from "@/lib/types";
+import { KeywordTable } from "@/components/keyword-table";
 
 export default function Home() {
   const [formState, onFormStateChange] = useState<KeywordRequest>({
     keywords: [],
     location_name: "United States",
   });
+  const [keywordResults, setKeywordResults] = useState<{results: KeywordResult[]}>({results:[]})
+
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
-
-    const res = await keywords({ ...formState });
-    console.log(res);
+    if (!formState.keywords.length){
+      return 
+    }
+    const res = await API.keywords({ ...formState });
+    console.log(res)
+    setKeywordResults(res)
   }
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <form onSubmit={onSubmit}>
+        <div className="flex space-x-1">
         <Input
           type="text"
           onChange={(v) =>
@@ -35,11 +53,11 @@ export default function Home() {
           placeholder="Keyword or URL "
         />
         <Button type="submit">WeRank</Button>
+        </div>
+        
       </form>
 
-      <ResultCard />
-      <KeywordCard />
-      <SerpCard />
+      <KeywordTable results={keywordResults.results}/>
     </main>
   );
 }
@@ -87,3 +105,4 @@ function ResultCard() {
     </Card>
   );
 }
+

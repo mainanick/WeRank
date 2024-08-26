@@ -12,8 +12,8 @@ import (
 
 	_ "github.com/joho/godotenv/autoload"
 
-	"github.com/mainanick/WeRank/config"
-	"github.com/mainanick/WeRank/router"
+	"github.com/mainanick/WeRank/internal/config"
+	"github.com/mainanick/WeRank/pkg/router"
 	"github.com/urfave/cli/v2"
 
 	"github.com/go-chi/chi/v5"

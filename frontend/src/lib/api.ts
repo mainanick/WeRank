@@ -10,7 +10,14 @@ export type KeywordRequest ={
 	include_adult_keywords?: string
 	sort_by?: string
 }
-export async function keywords(data: KeywordRequest) {
-    const res = await fetch(apiURL+"/keywords")
-    return await res.text()
+async function keywords(data: KeywordRequest) {
+    const res = await fetch(apiURL+"/keywords", {
+		method: "POST",
+		body: JSON.stringify(data)
+	})
+    return await res.json()
+}
+
+export const API = {
+	keywords
 }
