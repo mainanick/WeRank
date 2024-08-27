@@ -2,6 +2,7 @@ package router
 
 import (
 	"context"
+	"errors"
 	"log/slog"
 	"net/http"
 
@@ -11,6 +12,8 @@ import (
 	"github.com/mainanick/WeRank/pkg/binding"
 	"github.com/mainanick/dataforseo"
 )
+
+type H map[string]any
 
 func V1APIRouter(c *config.Config) chi.Router {
 	r := chi.NewRouter()
@@ -61,7 +64,36 @@ func KeywordHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	keywords, err := client.Keyword.KeywordsForKeywords(context.TODO(), d)
 	if err != nil {
-		slog.Error("DataForSEO Client Error: ", err)
+		if errors.Is(err, dataforseo.ErrPaymentRequired) {
+			slog.Error("DataForSEO Payment Required")
+			render.Status(r, http.StatusBadRequest)
+			render.JSON(w, r, H{"errors": []H{{
+				"message": "DataForSEO Payment Required",
+			}}})
+			return
+		}
+
+		if errors.Is(err, dataforseo.ErrUnauthorized) {
+			slog.Error("DataForSEO Unauthorized")
+			render.Status(r, http.StatusBadRequest)
+			render.JSON(w, r, H{"errors": []H{{
+				"message": "DataForSEO Unauthorized",
+			}}})
+			return
+		}
+
+		if errors.Is(err, dataforseo.ErrDataForSEO) {
+			slog.Error("DataForSEO Payment Required")
+			slog.Error("DataForSEO Error")
+			render.Status(r, http.StatusBadRequest)
+			render.JSON(w, r, H{"errors": []H{{
+				"message": "DataForSEO Error",
+			}}})
+			return
+		}
+		render.Status(r, http.StatusBadRequest)
+		render.JSON(w, r, H{"errors": []H{{}}})
+		return
 	}
 	res := &KeywordForKeywordResponse{}
 	for _, t := range keywords.Tasks {

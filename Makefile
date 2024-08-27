@@ -26,10 +26,10 @@ modules-tidy:
 	go mod tidy
 
 build:
-	go build -o bin/werank cmd/werank.go 
+	go build -o bin/werank main.go 
 
 run:
-	go run cmd/werank.go
+	go run main.go
 
 dev:
 	export DEBUG=1 && air .

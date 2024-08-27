@@ -5,7 +5,7 @@ tmp_dir = "tmp"
 [build]
   args_bin = ["-d"]
   bin = "./tmp/main"
-  cmd = "go build -o ./tmp/main werank.go"
+  cmd = "go build -o ./tmp/main main.go"
   delay = 1000
   exclude_dir = ["assets", "tmp", "vendor", "testdata", "frontend/node_modules"]
   exclude_file = []
