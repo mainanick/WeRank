@@ -23,7 +23,7 @@ func V1APIRouter(c *config.Config) chi.Router {
 }
 
 func DataForSEOClient(c *config.Config) *dataforseo.Client {
-	// dataforseo.DefaultBaseURL = "https://sandbox.dataforseo.com/v3/"
+	dataforseo.DefaultBaseURL = "https://sandbox.dataforseo.com/v3/"
 	client := dataforseo.NewClient(nil).WithAuthToken(c.DataForSEO.Username, c.DataForSEO.Password)
 	return client
 }
@@ -64,35 +64,7 @@ func KeywordHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	keywords, err := client.Keyword.KeywordsForKeywords(context.TODO(), d)
 	if err != nil {
-		if errors.Is(err, dataforseo.ErrPaymentRequired) {
-			slog.Error("DataForSEO Payment Required")
-			render.Status(r, http.StatusBadRequest)
-			render.JSON(w, r, H{"errors": []H{{
-				"message": "DataForSEO Payment Required",
-			}}})
-			return
-		}
-
-		if errors.Is(err, dataforseo.ErrUnauthorized) {
-			slog.Error("DataForSEO Unauthorized")
-			render.Status(r, http.StatusBadRequest)
-			render.JSON(w, r, H{"errors": []H{{
-				"message": "DataForSEO Unauthorized",
-			}}})
-			return
-		}
-
-		if errors.Is(err, dataforseo.ErrDataForSEO) {
-			slog.Error("DataForSEO Payment Required")
-			slog.Error("DataForSEO Error")
-			render.Status(r, http.StatusBadRequest)
-			render.JSON(w, r, H{"errors": []H{{
-				"message": "DataForSEO Error",
-			}}})
-			return
-		}
-		render.Status(r, http.StatusBadRequest)
-		render.JSON(w, r, H{"errors": []H{{}}})
+		DataSEOErrorResponse(w, r, err)
 		return
 	}
 	res := &KeywordForKeywordResponse{}
@@ -102,4 +74,43 @@ func KeywordHandler(w http.ResponseWriter, r *http.Request) {
 
 	render.Status(r, http.StatusOK)
 	render.JSON(w, r, res)
+	return
+}
+
+func DataSEOErrorResponse(w http.ResponseWriter, r *http.Request, err error) {
+	if err == nil {
+		return
+	}
+
+	if errors.Is(err, dataforseo.ErrPaymentRequired) {
+		slog.Error("DataForSEO Payment Required")
+		render.Status(r, http.StatusBadRequest)
+		render.JSON(w, r, H{"errors": []H{{
+			"message": "DataForSEO Payment Required",
+		}}})
+		return
+	}
+
+	if errors.Is(err, dataforseo.ErrUnauthorized) {
+		slog.Error("DataForSEO Unauthorized")
+		render.Status(r, http.StatusBadRequest)
+		render.JSON(w, r, H{"errors": []H{{
+			"message": "DataForSEO Unauthorized",
+		}}})
+		return
+	}
+
+	if errors.Is(err, dataforseo.ErrDataForSEO) {
+		slog.Error("DataForSEO Payment Required")
+		slog.Error("DataForSEO Error")
+		render.Status(r, http.StatusBadRequest)
+		render.JSON(w, r, H{"errors": []H{{
+			"message": "DataForSEO Error",
+		}}})
+		return
+	}
+
+	render.Status(r, http.StatusBadRequest)
+	render.JSON(w, r, H{"errors": []H{{}}})
+	return
 }

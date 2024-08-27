@@ -20,7 +20,7 @@ IS_CI ?= false
 BUILD_DATE = $(shell date -u +"%s") # UNIX timestamp 
 BUILD_HASH = $(shell git rev-parse HEAD)
 
-all: run
+all: build build-ui
 
 modules-tidy:
 	go mod tidy
@@ -28,6 +28,9 @@ modules-tidy:
 build:
 	go build -o bin/werank main.go 
 
+build-ui:
+	$(MAKE) -C frontend build
+	
 run:
 	go run main.go
 
