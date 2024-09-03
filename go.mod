@@ -4,6 +4,7 @@ go 1.23.0
 
 require (
 	github.com/go-chi/chi/v5 v5.1.0
+	github.com/mainanick/dataforseo v0.0.0-20240828143651-79c2f92cf53c
 	github.com/urfave/cli/v2 v2.27.4
 )
 
@@ -14,7 +15,6 @@ require (
 	github.com/go-chi/cors v1.2.1
 	github.com/go-chi/render v1.0.3
 	github.com/joho/godotenv v1.5.1
-	github.com/mainanick/dataforseo v0.0.0-20240827123649-5efa8576fa89
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/sethvargo/go-envconfig v1.1.0
 	github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1 // indirect

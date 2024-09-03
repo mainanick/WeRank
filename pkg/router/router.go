@@ -39,10 +39,6 @@ type KeywordForKeywordRequest struct {
 	SortBy               string   `json:"sort_by,omitempty"`
 }
 
-type KeywordForKeywordResponse struct {
-	Results []dataforseo.SiteKeywordResult `json:"results,omitempty"`
-}
-
 func KeywordHandler(w http.ResponseWriter, r *http.Request) {
 	c := config.Get()
 	client := DataForSEOClient(c)
@@ -55,7 +51,7 @@ func KeywordHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	d := dataforseo.KeywordForKeywordRequest{
+	d := &dataforseo.KeywordForKeywordRequest{
 		Keywords:     body.Keywords,
 		LocationName: body.LocationName,
 	}
@@ -67,13 +63,9 @@ func KeywordHandler(w http.ResponseWriter, r *http.Request) {
 		DataSEOErrorResponse(w, r, err)
 		return
 	}
-	res := &KeywordForKeywordResponse{}
-	for _, t := range keywords.Tasks {
-		res.Results = t.Result
-	}
 
 	render.Status(r, http.StatusOK)
-	render.JSON(w, r, res)
+	render.JSON(w, r, keywords)
 	return
 }
 

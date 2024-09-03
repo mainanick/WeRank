@@ -1,16 +1,12 @@
-"use client";
+'use client'
 
-import { Button } from "@/components/ui/button";
-import {
-  ColumnDef,
-  createColumnHelper,
-  flexRender,
-  getCoreRowModel,
-  getSortedRowModel,
-  SortingFn,
-  SortingState,
-  useReactTable,
-} from '@tanstack/react-table'
+import { FormEvent, useState } from 'react'
+
+import { API, KeywordRequest } from '@/lib/api'
+import { KeywordResult } from '@/lib/types'
+
+import { KeywordTable } from '@/components/keyword-table'
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -18,48 +14,56 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { API, KeywordRequest } from "@/lib/api";
-import { FormEvent, useMemo, useState } from "react";
-import { KeywordResult } from "@/lib/types";
-import { KeywordTable } from "@/components/keyword-table";
+} from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
 
 export default function Home() {
   const [formState, onFormStateChange] = useState<KeywordRequest>({
     keywords: [],
-    location_name: "United States",
-  });
-  const [keywordResults, setKeywordResults] = useState<{results: KeywordResult[]}>({results:[]})
+    location_name: 'United States',
+  })
+  const [keywordResults, setKeywordResults] = useState<{
+    results: KeywordResult[]
+  }>({ results: [] })
 
   async function onSubmit(e: FormEvent) {
-    e.preventDefault();
-    if (!formState.keywords.length){
-      return 
+    e.preventDefault()
+    if (!formState.keywords.length) {
+      return
     }
-    const res = await API.keywords({ ...formState });
+    const res = await API.keywords({ ...formState })
     console.log(res)
     setKeywordResults(res)
   }
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <form onSubmit={onSubmit}>
-        <div className="flex space-x-1">
-        <Input
-          type="text"
-          onChange={(v) =>
-            onFormStateChange({ ...formState, keywords: [v.target.value] })
-          }
-          placeholder="Keyword or URL "
-        />
-        <Button type="submit">WeRank</Button>
+    <main className="flex min-h-screen flex-col">
+      {/* TODO: Reserved for account & setting buttons*/}
+      <div className="min-h-14 bg-red-500"></div>
+      <div className="flex flex-col justify-center">
+        <div className="flex items-center justify-center">
+          <p className="suez-one-regular text-5xl">WeRank</p>
         </div>
-        
-      </form>
-
-      <KeywordTable results={keywordResults.results}/>
+        <div className="bg-green-400">
+          <div className="max-w-[600px]">
+            <form onSubmit={onSubmit}>
+              <div className="flex space-x-1">
+                <Input
+                  type="text"
+                  onChange={(v) =>
+                    onFormStateChange({
+                      ...formState,
+                      keywords: [v.target.value],
+                    })
+                  }
+                  placeholder="Type a Keyword or Domain"
+                />
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
     </main>
-  );
+  )
 }
 
 function SerpCard() {
@@ -75,7 +79,7 @@ function SerpCard() {
         <Button>Deploy</Button>
       </CardFooter>
     </Card>
-  );
+  )
 }
 
 function KeywordCard() {
@@ -91,7 +95,7 @@ function KeywordCard() {
         <Button>Deploy</Button>
       </CardFooter>
     </Card>
-  );
+  )
 }
 
 function ResultCard() {
@@ -103,6 +107,5 @@ function ResultCard() {
       </CardHeader>
       <CardContent></CardContent>
     </Card>
-  );
+  )
 }
-
