@@ -45,7 +45,7 @@ func KeywordHandler(w http.ResponseWriter, r *http.Request) {
 
 	body := &KeywordForKeywordRequest{}
 	if err := binding.ShouldBindJSON(r.Body, body); err != nil {
-		slog.Error("Error Binding JSON ", err)
+		slog.Error("Error Binding JSON ", "error", err)
 		render.Status(r, http.StatusBadRequest)
 		render.JSON(w, r, err)
 		return
@@ -66,7 +66,6 @@ func KeywordHandler(w http.ResponseWriter, r *http.Request) {
 
 	render.Status(r, http.StatusOK)
 	render.JSON(w, r, keywords)
-	return
 }
 
 func DataSEOErrorResponse(w http.ResponseWriter, r *http.Request, err error) {
@@ -104,5 +103,4 @@ func DataSEOErrorResponse(w http.ResponseWriter, r *http.Request, err error) {
 
 	render.Status(r, http.StatusBadRequest)
 	render.JSON(w, r, H{"errors": []H{{}}})
-	return
 }

@@ -1,4 +1,4 @@
-PHONY: build dev
+.PHONY: build dev
 
 build:
 	pnpm build
