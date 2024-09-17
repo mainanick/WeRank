@@ -1,11 +1,11 @@
 import type { Config } from "tailwindcss";
-import {nextui} from "@nextui-org/react";
+import { nextui } from "@nextui-org/react";
 const config: Config = {
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./node_modules/@nextui-org/theme/dist/components/(button|ripple|spinner).js"
+    "./node_modules/@nextui-org/theme/dist/components/(button|ripple|spinner|input|table|navbar).js",
   ],
   theme: {
     extend: {
@@ -16,8 +16,6 @@ const config: Config = {
     },
   },
   darkMode: "class",
-  plugins: [
-    nextui()
-  ],
+  plugins: [nextui()],
 };
 export default config;

@@ -48,7 +48,7 @@ func main() {
 	}
 }
 
-//go:embed frontend/out/*
+//go:embed all:frontend/out/*
 var nextFS embed.FS
 
 func Run(c *config.Config) error {

@@ -4,7 +4,7 @@ go 1.23.0
 
 require (
 	github.com/go-chi/chi/v5 v5.1.0
-	github.com/mainanick/dataforseo v0.0.0-20240828143651-79c2f92cf53c
+	github.com/mainanick/dataforseo v0.0.0-20240830132017-0dad0fafc6f9
 	github.com/urfave/cli/v2 v2.27.4
 )
 
