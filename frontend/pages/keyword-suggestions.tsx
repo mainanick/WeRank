@@ -1,10 +1,6 @@
 import { Layout } from "@/components/Layout";
 import { FormEvent, useState } from "react";
-import {
-  API,
-  KeywordSuggestionsResponse,
-  RelatedKeywordsResponse,
-} from "@/lib/api";
+import { API, KeywordSuggestionsResponse } from "@/lib/api";
 import { Input } from "@/components/ui/Input";
 import { formatNumber } from "@/lib/utils";
 import {
@@ -25,7 +21,9 @@ export default function Page() {
     depth: 1,
     limit: 500,
   });
-  const [results, setResults] = useState<RelatedKeywordsResponse | undefined>();
+  const [results, setResults] = useState<
+    KeywordSuggestionsResponse | undefined
+  >();
 
   const onSubmit = async (ev: FormEvent<HTMLFormElement>) => {
     ev.preventDefault();
