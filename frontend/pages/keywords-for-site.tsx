@@ -1,5 +1,5 @@
 import { Layout } from "@/components/Layout";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { API, GoogleLabsKeywordForSiteResponse } from "@/lib/api";
 import { Input } from "@/components/ui/Input";
 import { formatNumber } from "@/lib/utils";
@@ -11,44 +11,31 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/Table";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/Select";
-import { SelectProps } from "@radix-ui/react-select";
+import { CountrySelect } from "@/components/CountrySelect";
 
-type Props = {
-  target: string;
-  location_name: string;
-  response?: GoogleLabsKeywordForSiteResponse;
-};
 export default function Page() {
-  const [state, setState] = useState<Props>({
+  const [formState, setFormState] = useState({
     target: "",
     location_name: "Kenya",
   });
+  const [results, setResults] = useState<
+    GoogleLabsKeywordForSiteResponse | undefined
+  >();
+
+  const onSubmit = async (ev: FormEvent<HTMLFormElement>) => {
+    ev.preventDefault();
+    if (formState.target === "" || formState.location_name === "") return;
+    const res = await API.keywordsForSite({
+      target: formState.target,
+      location_name: formState.location_name,
+      limit: 500,
+    });
+    setResults(res);
+  };
   return (
     <Layout>
       <div className="mb-4">
-        <form
-          id="KeywordForSite"
-          onSubmit={async (ev) => {
-            ev.preventDefault();
-            if (state.target === "") return;
-            console.log(state);
-            const res = await API.keywordsForSite({
-              target: state.target,
-              location_name: state.location_name,
-              limit: 500,
-            });
-            setState({ ...state, response: res });
-          }}
-        >
+        <form id="KeywordForSite" onSubmit={onSubmit}>
           <div className="flex w-full max-w-sm items-center">
             <Input
               type="text"
@@ -56,14 +43,13 @@ export default function Page() {
               placeholder="Domain"
               className="h-8 border-r-0 rounded-r-none"
               onChange={(ev) => {
-                setState({ ...state, target: ev.target.value });
+                setFormState({ ...formState, target: ev.target.value });
               }}
             />
             <CountrySelect
               name="location_name"
-              // className="h-8 px-2 bg-gray-200 border-x rounded-r-md"
               onValueChange={(value) => {
-                setState({ ...state, location_name: value });
+                setFormState({ ...formState, location_name: value });
               }}
             />
             <button
@@ -76,8 +62,8 @@ export default function Page() {
         </form>
       </div>
 
-      <div>
-        {state.response && (
+      {results && (
+        <div>
           <Table className="border border-t-0 rounded-md">
             <TableHeader className="bg-gray-100">
               <TableRow>
@@ -91,13 +77,11 @@ export default function Page() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {renderTableRow(
-                state.response.tasks.length ? state.response.tasks : []
-              )}
+              {renderTableRow(results.tasks.length ? results.tasks : [])}
             </TableBody>
           </Table>
-        )}
-      </div>
+        </div>
+      )}
     </Layout>
   );
 }
@@ -123,21 +107,4 @@ function renderTableRow(tasks: GoogleLabsKeywordForSiteResponse["tasks"]) {
       </TableRow>
     );
   });
-}
-
-export function CountrySelect(props: SelectProps) {
-  return (
-    <Select {...props}>
-      <SelectTrigger className="h-8 border-l rounded-l-none">
-        <SelectValue placeholder="Country" />
-      </SelectTrigger>
-      <SelectContent className="bg-white">
-        <SelectGroup>
-          <SelectLabel>Country</SelectLabel>
-          <SelectItem value="Kenya">Kenya</SelectItem>
-          <SelectItem value="United States">USA</SelectItem>
-        </SelectGroup>
-      </SelectContent>
-    </Select>
-  );
 }

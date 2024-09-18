@@ -42,6 +42,7 @@ func KeywordForSiteHandler(w http.ResponseWriter, r *http.Request) {
 		render.JSON(w, r, err)
 		return
 	}
+	slog.Debug("[KeywordForSite]", "body", body)
 
 	res, err := client.GoogleLabs.KeywordForSite(context.TODO(), body)
 	if err != nil {
@@ -65,6 +66,7 @@ func RelatedKeywordHandler(w http.ResponseWriter, r *http.Request) {
 		render.JSON(w, r, err)
 		return
 	}
+	slog.Debug("[RelateKeywords]", "body", body)
 
 	res, err := client.GoogleLabs.RelatedKeywords(context.TODO(), body)
 	if err != nil {
@@ -88,6 +90,7 @@ func KeywordSuggestions(w http.ResponseWriter, r *http.Request) {
 		render.JSON(w, r, err)
 		return
 	}
+	slog.Debug("[KeywordSuggestions]", "body", body)
 
 	res, err := client.GoogleLabs.KeywordSuggestions(context.TODO(), body)
 	if err != nil {
@@ -111,6 +114,7 @@ func KeywordIdeas(w http.ResponseWriter, r *http.Request) {
 		render.JSON(w, r, err)
 		return
 	}
+	slog.Debug("[KeywordIdeas]", "body", body)
 
 	res, err := client.GoogleLabs.KeywordIdeas(context.TODO(), body)
 	if err != nil {
@@ -134,6 +138,7 @@ func KeywordHistoricalSearchVolume(w http.ResponseWriter, r *http.Request) {
 		render.JSON(w, r, err)
 		return
 	}
+	slog.Debug("[KeywordHistoricalSearchVolume]", "body", body)
 
 	res, err := client.GoogleLabs.HistoricalSearchVolume(context.TODO(), body)
 	if err != nil {
@@ -157,6 +162,7 @@ func BulkKeywordDifficulty(w http.ResponseWriter, r *http.Request) {
 		render.JSON(w, r, err)
 		return
 	}
+	slog.Debug("[BulkKeywordDifficulty]", "body", body)
 
 	res, err := client.GoogleLabs.BulkKeywordDifficulty(context.TODO(), body)
 	if err != nil {
@@ -180,6 +186,7 @@ func SearchIntent(w http.ResponseWriter, r *http.Request) {
 		render.JSON(w, r, err)
 		return
 	}
+	slog.Debug("[SearchIntent]", "body", body)
 
 	res, err := client.GoogleLabs.SearchIntent(context.TODO(), body)
 	if err != nil {
@@ -203,6 +210,7 @@ func RankedKeywords(w http.ResponseWriter, r *http.Request) {
 		render.JSON(w, r, err)
 		return
 	}
+	slog.Debug("[RankedKeywords]", "body", body)
 
 	res, err := client.GoogleLabs.RankedKeywords(context.TODO(), body)
 	if err != nil {
@@ -226,6 +234,7 @@ func SERPCompetitors(w http.ResponseWriter, r *http.Request) {
 		render.JSON(w, r, err)
 		return
 	}
+	slog.Debug("[SERPCompetitors]", "body", body)
 
 	res, err := client.GoogleLabs.SERPCompetitors(context.TODO(), body)
 	if err != nil {
@@ -249,6 +258,7 @@ func CompetitorsDomain(w http.ResponseWriter, r *http.Request) {
 		render.JSON(w, r, err)
 		return
 	}
+	slog.Debug("[CompetitorsDomain]", "body", body)
 
 	res, err := client.GoogleLabs.CompetitorsDomain(context.TODO(), body)
 	if err != nil {
@@ -272,6 +282,7 @@ func DomainIntersection(w http.ResponseWriter, r *http.Request) {
 		render.JSON(w, r, err)
 		return
 	}
+	slog.Debug("[DomainIntersection]", "body", body)
 
 	res, err := client.GoogleLabs.DomainIntersection(context.TODO(), body)
 	if err != nil {
@@ -295,6 +306,7 @@ func Subdomains(w http.ResponseWriter, r *http.Request) {
 		render.JSON(w, r, err)
 		return
 	}
+	slog.Debug("[Subdomains]", "body", body)
 
 	res, err := client.GoogleLabs.Subdomains(context.TODO(), body)
 	if err != nil {
@@ -318,6 +330,7 @@ func RelevantPages(w http.ResponseWriter, r *http.Request) {
 		render.JSON(w, r, err)
 		return
 	}
+	slog.Debug("[RelevantPages]", "body", body)
 
 	res, err := client.GoogleLabs.RelevantPages(context.TODO(), body)
 	if err != nil {
@@ -341,6 +354,7 @@ func DomainRank(w http.ResponseWriter, r *http.Request) {
 		render.JSON(w, r, err)
 		return
 	}
+	slog.Debug("[DomainRank]", "body", body)
 
 	res, err := client.GoogleLabs.DomainRank(context.TODO(), body)
 	if err != nil {
@@ -364,6 +378,7 @@ func PageIntersection(w http.ResponseWriter, r *http.Request) {
 		render.JSON(w, r, err)
 		return
 	}
+	slog.Debug("[PageIntersection]", "body", body)
 
 	res, err := client.GoogleLabs.PageIntersection(context.TODO(), body)
 	if err != nil {
@@ -387,6 +402,7 @@ func BulkTrafficEstimation(w http.ResponseWriter, r *http.Request) {
 		render.JSON(w, r, err)
 		return
 	}
+	slog.Debug("[BulkTrafficEstimation]", "body", body)
 
 	keywords, err := client.GoogleLabs.BulkTrafficEstimation(context.TODO(), body)
 	if err != nil {
@@ -410,6 +426,7 @@ func HistoricalBulkTraffic(w http.ResponseWriter, r *http.Request) {
 		render.JSON(w, r, err)
 		return
 	}
+	slog.Debug("[HistoricalBulkTraffic]", "body", body)
 
 	res, err := client.GoogleLabs.HistoricalBulkTrafficEstimation(context.TODO(), body)
 	if err != nil {
@@ -426,7 +443,7 @@ func DataSEOErrorResponse(w http.ResponseWriter, r *http.Request, err error) {
 	}
 
 	if errors.Is(err, dataforseo.ErrPaymentRequired) {
-		slog.Error("DataForSEO Payment Required")
+		slog.Error("DataForSEO Payment Required", "error", err.Error())
 		render.Status(r, http.StatusBadRequest)
 		render.JSON(w, r, H{"errors": []H{{
 			"message": "DataForSEO Payment Required",
@@ -435,7 +452,7 @@ func DataSEOErrorResponse(w http.ResponseWriter, r *http.Request, err error) {
 	}
 
 	if errors.Is(err, dataforseo.ErrUnauthorized) {
-		slog.Error("DataForSEO Unauthorized")
+		slog.Error("DataForSEO Unauthorized", "error", err.Error())
 		render.Status(r, http.StatusBadRequest)
 		render.JSON(w, r, H{"errors": []H{{
 			"message": "DataForSEO Unauthorized",
@@ -444,8 +461,7 @@ func DataSEOErrorResponse(w http.ResponseWriter, r *http.Request, err error) {
 	}
 
 	if errors.Is(err, dataforseo.ErrDataForSEO) {
-		slog.Error("DataForSEO Payment Required")
-		slog.Error("DataForSEO Error")
+		slog.Error("DataForSEO Error", "error", err.Error())
 		render.Status(r, http.StatusBadRequest)
 		render.JSON(w, r, H{"errors": []H{{
 			"message": "DataForSEO Error",
