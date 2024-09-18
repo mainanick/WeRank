@@ -74,5 +74,44 @@ export function AsideNav(props: { links: SectionLink[] }) {
 }
 
 export function Main(props: PropsWithChildren) {
-  return <main className="bg-green-600 ml-64 p-6 ">{props.children}</main>;
+  return <main className="ml-64 pt-6 px-6">{props.children}</main>;
+}
+
+const links = [
+  {
+    title: "Keyword Research",
+    links: [
+      { title: "Keyword For Site", href: "/keywords-for-site" },
+      { title: "Related Keywords", href: "/related-keywords" },
+      { title: "Keyword Suggestions", href: "/keyword-suggestions" },
+      { title: "Keyword Ideas", href: "/keyword-ideas" },
+      { title: "Histroic Search Volume", href: "/keyword-search-volume" },
+      { title: "Bulk Keyword Difficulty", href: "/bulk-keyword-difficulty" },
+      { title: "Search Intent", href: "/search-intent" },
+      { title: "Ranked Keywords", href: "/ranked-keywords" },
+      { title: "SERP Competitors", href: "/serp-competitors" },
+    ],
+  },
+  {
+    title: "Competitor Analysis",
+    links: [
+      { title: "Competitors Domain", href: "/competitors-domain" },
+      { title: "Domain Intersection", href: "/domain-intersection" },
+      { title: "Subdomains", href: "/subdomains" },
+      { title: "Relevant Pages", href: "/relevant-pages" },
+      { title: "Domain Rank", href: "/domain-rank" },
+      { title: "Page Intersection", href: "/page-intersection" },
+      { title: "Bulk Traffic Estimation", href: "/bulk-traffic-estimation" },
+      { title: "Historical Bulk Traffic", href: "/historical-bulk-traffic" },
+    ],
+  },
+];
+export function Layout(props: PropsWithChildren) {
+  return (
+    <>
+      <HeaderNav />
+      <AsideNav links={links} />
+      <Main>{props.children}</Main>
+    </>
+  );
 }
