@@ -1,29 +1,46 @@
 import { Layout } from "@/components/Layout";
-import { FormEvent, useState } from "react";
+import { useState } from "react";
 import { API, GoogleLabsKeywordForSiteResponse } from "@/lib/api";
-import { Input } from "@/components/ui/Input";
-import { formatNumber } from "@/lib/utils";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableColumn,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/Table";
-import { CountrySelect } from "@/components/CountrySelect";
+import { DataTable } from "@/components/Datatable";
+import DomainForm, { FormState } from "@/components/DomainForm";
 
 export default function Page() {
-  const [formState, setFormState] = useState({
-    target: "",
-    location_name: "Kenya",
-  });
+  const columns = [
+    {
+      header: "Keyword",
+      accessorKey: "keyword",
+    },
+    {
+      header: "Search Volume",
+      accessorKey: "keyword_info.search_volume",
+    },
+    {
+      header: "Competition",
+      accessorKey: "keyword_info.competition",
+    },
+    {
+      header: "Competition Level",
+      accessorKey: "keyword_info.competition_level",
+    },
+    {
+      header: "CPC",
+      accessorKey: "keyword_info.cpc",
+    },
+    {
+      header: "KD",
+      accessorKey: "keyword_properties.keyword_difficulty",
+    },
+    {
+      header: "Search Intent",
+      accessorKey: "search_intent_info.main_intent",
+    },
+  ];
+
   const [results, setResults] = useState<
     GoogleLabsKeywordForSiteResponse | undefined
   >();
 
-  const onSubmit = async (ev: FormEvent<HTMLFormElement>) => {
-    ev.preventDefault();
+  const onFormSubmit = async (formState: FormState) => {
     if (formState.target === "" || formState.location_name === "") return;
     const res = await API.keywordsForSite({
       target: formState.target,
@@ -32,79 +49,16 @@ export default function Page() {
     });
     setResults(res);
   };
+
+  const data = results?.tasks.length ? results?.tasks[0].result[0].items : [];
+
   return (
     <Layout>
       <div className="mb-4">
-        <form id="KeywordForSite" onSubmit={onSubmit}>
-          <div className="flex w-full max-w-sm items-center">
-            <Input
-              type="text"
-              name="target"
-              placeholder="Domain"
-              className="h-8 border-r-0 rounded-r-none"
-              onChange={(ev) => {
-                setFormState({ ...formState, target: ev.target.value });
-              }}
-            />
-            <CountrySelect
-              name="location_name"
-              onValueChange={(value) => {
-                setFormState({ ...formState, location_name: value });
-              }}
-            />
-            <button
-              type="submit"
-              className="h-8 px-2 ml-2 bg-red-400 rounded-md text-white"
-            >
-              Search
-            </button>
-          </div>
-        </form>
+        <DomainForm onFormSubmit={onFormSubmit} />
       </div>
 
-      {results && (
-        <div>
-          <Table className="border border-t-0 rounded-md">
-            <TableHeader className="bg-gray-100">
-              <TableRow>
-                <TableColumn>Keyword</TableColumn>
-                <TableColumn className="text-right">Search Volume</TableColumn>
-                <TableColumn className="text-right">Competition</TableColumn>
-                <TableColumn>Competition Level</TableColumn>
-                <TableColumn className="text-right">CPC</TableColumn>
-                <TableColumn className="text-right">KD</TableColumn>
-                <TableColumn>Intent</TableColumn>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {renderTableRow(results.tasks.length ? results.tasks : [])}
-            </TableBody>
-          </Table>
-        </div>
-      )}
+      {results && <DataTable columns={columns} data={data} />}
     </Layout>
   );
-}
-
-function renderTableRow(tasks: GoogleLabsKeywordForSiteResponse["tasks"]) {
-  const task = tasks[0];
-  return task.result[0].items.map((item) => {
-    return (
-      <TableRow key={item.keyword}>
-        <TableCell>{item.keyword}</TableCell>
-        <TableCell className="text-right">
-          {formatNumber(item.keyword_info.search_volume)}
-        </TableCell>
-        <TableCell className="text-right">
-          {item.keyword_info.competition}
-        </TableCell>
-        <TableCell>{item.keyword_info.competition_level}</TableCell>
-        <TableCell className="text-right">{item.keyword_info.cpc}</TableCell>
-        <TableCell className="text-right">
-          {item.keyword_properties.keyword_difficulty}
-        </TableCell>
-        <TableCell>{item.search_intent_info.main_intent}</TableCell>
-      </TableRow>
-    );
-  });
 }

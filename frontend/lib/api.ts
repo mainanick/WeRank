@@ -178,8 +178,60 @@ async function keywordSuggestions(data: KeywordSuggestionsRequest) {
   return (await res.json()) as KeywordSuggestionsResponse;
 }
 
+export type KeywordIdeasRequest = {
+  keywords: string[];
+  location_name: string;
+  language_name: string;
+  closely_variants?: boolean;
+  ignore_synonyms?: string;
+  include_serp_info?: boolean;
+  include_clickstream_data?: boolean;
+  limit?: number;
+  offset?: number;
+  offset_token?: string;
+  filters?: string[];
+  order_by?: string[];
+  tag?: string;
+};
+
+export type KeywordIdeasResponse = BaseResponse & {
+  tasks: Array<
+    BaseResponseTaskList & {
+      result: Array<{
+        se_type: string;
+        seed_keywords: string[];
+        location_code: number;
+        language_code: string;
+        total_count: number;
+        items_count: number;
+        offset: number;
+        offset_token: string;
+        items: Array<{
+          se_type: string;
+          keyword: string;
+          location_code: number;
+          language_code: string;
+          keyword_info: KeywordInfo;
+          keyword_properties: KeywordProperties;
+          serp_info: SERPInfo;
+          avg_backlink_info: AvgBacklinkInfo;
+          search_intent_info: SearchIntentInfo;
+        }>;
+      }>;
+    }
+  >;
+};
+async function keywordIdeas(data: KeywordIdeasRequest) {
+  const res = await fetch(apiURL + "/keyword-ideas", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+  return (await res.json()) as KeywordIdeasResponse;
+}
+
 export const API = {
   keywordsForSite,
   relatedKeywords,
   keywordSuggestions,
+  keywordIdeas,
 };

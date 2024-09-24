@@ -1,10 +1,6 @@
 import { Layout } from "@/components/Layout";
 import { FormEvent, useState } from "react";
-import {
-  API,
-  KeywordSuggestionsRequest,
-  KeywordSuggestionsResponse,
-} from "@/lib/api";
+import { API, KeywordIdeasRequest, KeywordIdeasResponse } from "@/lib/api";
 import { Input } from "@/components/ui/Input";
 import { CountrySelect } from "@/components/CountrySelect";
 import { DataTable } from "@/components/Datatable";
@@ -40,21 +36,18 @@ export default function Page() {
       accessorKey: "search_intent_info.main_intent",
     },
   ];
-  const [formState, setFormState] = useState<KeywordSuggestionsRequest>({
-    keyword: "",
+  const [formState, setFormState] = useState<KeywordIdeasRequest>({
+    keywords: [""],
     location_name: "Kenya",
     language_name: "English",
-    depth: 1,
-    limit: 500,
   });
-  const [results, setResults] = useState<
-    KeywordSuggestionsResponse | undefined
-  >();
+  const [results, setResults] = useState<KeywordIdeasResponse | undefined>();
 
   const onSubmit = async (ev: FormEvent<HTMLFormElement>) => {
     ev.preventDefault();
-    if (formState.keyword === "" || formState.location_name === "") return;
-    const res = await API.keywordSuggestions({ ...formState });
+    if (formState.keywords.length === 0 || formState.location_name === "")
+      return;
+    const res = await API.keywordIdeas({ ...formState });
     setResults(res);
   };
   const data = results?.tasks.length ? results?.tasks[0].result[0].items : [];
@@ -69,7 +62,7 @@ export default function Page() {
               placeholder="Keyword"
               className="h-8 border-r-0 rounded-r-none"
               onChange={(ev) => {
-                setFormState({ ...formState, keyword: ev.target.value });
+                setFormState({ ...formState, keywords: [ev.target.value] });
               }}
             />
             <CountrySelect
