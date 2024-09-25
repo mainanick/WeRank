@@ -85,7 +85,7 @@ const links = [
       { title: "Related Keywords", href: "/related-keywords" },
       { title: "Keyword Suggestions", href: "/keyword-suggestions" },
       { title: "Keyword Ideas", href: "/keyword-ideas" },
-      { title: "Histroic Search Volume", href: "/keyword-search-volume" },
+      { title: "Histroic Search Volume", href: "/historical-search-volume" },
       { title: "Bulk Keyword Difficulty", href: "/bulk-keyword-difficulty" },
       { title: "Search Intent", href: "/search-intent" },
       { title: "Ranked Keywords", href: "/ranked-keywords" },

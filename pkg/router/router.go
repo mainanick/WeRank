@@ -30,7 +30,7 @@ func V1APIRouter(c *config.Config) chi.Router {
 	r.Post("/related-keywords", handlers.RelatedKeywordHandler)
 	r.Post("/keyword-suggestions", handlers.KeywordSuggestions)
 	r.Post("/keyword-ideas", handlers.KeywordIdeas)
-	r.Post("/keyword-historic-search-volume", handlers.KeywordHistoricalSearchVolume)
+	r.Post("/historic-search-volume", handlers.KeywordHistoricalSearchVolume)
 	r.Post("/bulk-keyword-difficulty", handlers.BulkKeywordDifficulty)
 	r.Post("/search-intent", handlers.SearchIntent)
 	r.Post("/ranked-keywords", handlers.RankedKeywords)
