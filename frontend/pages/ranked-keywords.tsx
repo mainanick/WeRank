@@ -4,13 +4,41 @@ import { API, RankedKeywordsRequest, RankedKeywordsResponse } from "@/lib/api";
 import { Input } from "@/components/ui/Input";
 import { CountrySelect } from "@/components/CountrySelect";
 import { DataTable } from "@/components/Datatable";
+import { SortColumn } from "@/components/SortColumn";
+import { ColumnDef } from "@tanstack/react-table";
 
+type T = RankedKeywordsResponse["tasks"][0]["result"][0]["items"][0];
 export default function Page() {
   // TODO Show Metrics
-  const columns = [
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  const columns: ColumnDef<T, any>[] = [
     {
-      header: "Keyword",
-      accessorKey: "keyword",
+      header: (ctx) => SortColumn(ctx, "Keyword"),
+      accessorKey: "keyword_data.keyword",
+    },
+    {
+      header: (ctx) => SortColumn(ctx, "Search Volume"),
+      accessorKey: "keyword_data.keyword_info.search_volume",
+    },
+    {
+      header: (ctx) => SortColumn(ctx, "Competition"),
+      accessorKey: "keyword_data.keyword_info.competition",
+    },
+    {
+      header: (ctx) => SortColumn(ctx, "Competition Level"),
+      accessorKey: "keyword_data.keyword_info.competition_level",
+    },
+    {
+      header: (ctx) => SortColumn(ctx, "CPC"),
+      accessorKey: "keyword_data.keyword_info.cpc",
+    },
+    {
+      header: (ctx) => SortColumn(ctx, "KD"),
+      accessorKey: "keyword_data.keyword_properties.keyword_difficulty",
+    },
+    {
+      header: (ctx) => SortColumn(ctx, "Search Intent"),
+      accessorKey: "keyword_data.search_intent_info.main_intent",
     },
   ];
   const [formState, setFormState] = useState<RankedKeywordsRequest>({

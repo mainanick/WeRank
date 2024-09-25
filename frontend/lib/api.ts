@@ -27,7 +27,7 @@ export type KeywordForSiteRequest = {
   tag?: string;
 };
 
-export type GoogleLabsKeywordForSiteResponse = BaseResponse & {
+export type KeywordForSiteResponse = BaseResponse & {
   tasks: Array<
     BaseResponseTaskList & {
       result: Array<{
@@ -59,7 +59,7 @@ async function keywordsForSite(data: KeywordForSiteRequest) {
     method: "POST",
     body: JSON.stringify(data),
   });
-  return (await res.json()) as GoogleLabsKeywordForSiteResponse;
+  return (await res.json()) as KeywordForSiteResponse;
 }
 
 export type RelatedKeywordsRequest = {

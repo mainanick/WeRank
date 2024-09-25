@@ -8,44 +8,45 @@ import {
 import { Input } from "@/components/ui/Input";
 import { CountrySelect } from "@/components/CountrySelect";
 import { DataTable } from "@/components/Datatable";
+import { SortColumn } from "@/components/SortColumn";
+import { ColumnDef } from "@tanstack/react-table";
 
+type T = SERPCompetitorsResponse["tasks"][0]["result"][0]["items"][0];
 export default function Page() {
   // TODO
-  const columns = [
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  const columns: ColumnDef<T, any>[] = [
     {
-      header: "Domain",
+      header: (ctx) => SortColumn(ctx, "Domain"),
       accessorKey: "domain",
     },
     {
-      header: "Avg Position",
+      header: (ctx) => SortColumn(ctx, "Avg Position"),
       accessorKey: "avg_position",
     },
     {
-      header: "Avg Position",
-      accessorKey: "avg_position",
-    },
-    {
-      header: "Median Position",
+      header: (ctx) => SortColumn(ctx, "Median Position"),
       accessorKey: "median_position",
     },
+
     {
-      header: "Rating",
+      header: (ctx) => SortColumn(ctx, "Rating"),
       accessorKey: "rating",
     },
     {
-      header: "ETV",
+      header: (ctx) => SortColumn(ctx, "ETV"),
       accessorKey: "etv",
     },
     {
-      header: "Keywords Count",
+      header: (ctx) => SortColumn(ctx, "Keywords Count"),
       accessorKey: "keywords_count",
     },
     {
-      header: "Visibility",
+      header: (ctx) => SortColumn(ctx, "Visibility"),
       accessorKey: "visibility",
     },
     {
-      header: "Relevant SERP Iitems",
+      header: (ctx) => SortColumn(ctx, "Relevant SERP Items"),
       accessorKey: "relevant_serp_items",
     },
   ];

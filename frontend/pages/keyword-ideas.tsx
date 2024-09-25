@@ -4,35 +4,39 @@ import { API, KeywordIdeasRequest, KeywordIdeasResponse } from "@/lib/api";
 import { Input } from "@/components/ui/Input";
 import { CountrySelect } from "@/components/CountrySelect";
 import { DataTable } from "@/components/Datatable";
+import { ColumnDef } from "@tanstack/react-table";
+import { SortColumn } from "@/components/SortColumn";
 
+type T = KeywordIdeasResponse["tasks"][0]["result"][0]["items"][0];
 export default function Page() {
-  const columns = [
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  const columns: ColumnDef<T, any>[] = [
     {
-      header: "Keyword",
+      header: (ctx) => SortColumn(ctx, "Keyword"),
       accessorKey: "keyword",
     },
     {
-      header: "Search Volume",
+      header: (ctx) => SortColumn(ctx, "Search Volume"),
       accessorKey: "keyword_info.search_volume",
     },
     {
-      header: "Competition",
+      header: (ctx) => SortColumn(ctx, "Competition"),
       accessorKey: "keyword_info.competition",
     },
     {
-      header: "Competition Level",
+      header: (ctx) => SortColumn(ctx, "Competition Level"),
       accessorKey: "keyword_info.competition_level",
     },
     {
-      header: "CPC",
+      header: (ctx) => SortColumn(ctx, "CPC"),
       accessorKey: "keyword_info.cpc",
     },
     {
-      header: "KD",
+      header: (ctx) => SortColumn(ctx, "KD"),
       accessorKey: "keyword_properties.keyword_difficulty",
     },
     {
-      header: "Search Intent",
+      header: (ctx) => SortColumn(ctx, "Search Intent"),
       accessorKey: "search_intent_info.main_intent",
     },
   ];

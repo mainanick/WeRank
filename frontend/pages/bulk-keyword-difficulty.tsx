@@ -8,15 +8,19 @@ import {
 import { Input } from "@/components/ui/Input";
 import { CountrySelect } from "@/components/CountrySelect";
 import { DataTable } from "@/components/Datatable";
+import { SortColumn } from "@/components/SortColumn";
+import { ColumnDef } from "@tanstack/react-table";
 
+type T = BulkKeywordDifficultyResponse["tasks"][0]["result"][0]["items"][0];
 export default function Page() {
-  const columns = [
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  const columns: ColumnDef<T, any>[] = [
     {
-      header: "Keyword",
+      header: (ctx) => SortColumn(ctx, "Keyword"),
       accessorKey: "keyword",
     },
     {
-      header: "Keyword Difficulty",
+      header: (ctx) => SortColumn(ctx, "Keyword Difficulty"),
       accessorKey: "keyword_difficulty",
     },
   ];

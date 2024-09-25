@@ -4,16 +4,20 @@ import { API, SearchIntentRequest, SearchIntentResponse } from "@/lib/api";
 import { Input } from "@/components/ui/Input";
 import { CountrySelect } from "@/components/CountrySelect";
 import { DataTable } from "@/components/Datatable";
+import { SortColumn } from "@/components/SortColumn";
+import { ColumnDef } from "@tanstack/react-table";
 
+type T = SearchIntentResponse["tasks"][0]["result"][0]["items"][0];
 export default function Page() {
   // TODO Add secondary search intents
-  const columns = [
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  const columns: ColumnDef<T, any>[] = [
     {
-      header: "Keyword",
+      header: (ctx) => SortColumn(ctx, "Keyword"),
       accessorKey: "keyword",
     },
     {
-      header: "Search Intent",
+      header: (ctx) => SortColumn(ctx, "Search Intent"),
       accessorKey: "keyword_intent.label",
     },
   ];
