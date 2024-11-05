@@ -17,9 +17,9 @@ type DataForSEOConfig struct {
 }
 
 type Config struct {
-	PORT         string   `env:"PORT,default=3333"`
+	PORT         string   `env:"PORT,default=8000"`
 	Debug        bool     `env:"DEBUG,default=false"`
-	AllowedHosts []string `env:"ALLOWED_HOSTS,required"`
+	AllowedHosts []string `env:"ALLOWED_HOSTS,default=*"`
 	DisableUI    bool     `env:"DISABLE_UI,default=false"`
 	DataForSEO   *DataForSEOConfig
 }

@@ -255,7 +255,7 @@ export type HistoricalSearchVolumeResponse = BaseResponse & {
           keyword: string;
           location_code: number;
           language_code: string;
-          serach_partners: boolean;
+          search_partners: boolean;
           keyword_info: KeywordInfo;
           keyword_properties: KeywordProperties;
           serp_info: SERPInfo;
@@ -458,6 +458,310 @@ async function SERPCompetitors(data: SERPCompetitorsRequest) {
   return (await res.json()) as SERPCompetitorsResponse;
 }
 
+export type CompetitorsDomainRequest = {
+  target: string;
+  location_name: string;
+  language_name: string;
+  item_types?: string[];
+  filters?: string[];
+  order_by?: string[];
+  limit?: number;
+  offset?: number;
+  max_rank_group?: number;
+  exclude_top_domains?: boolean;
+  intersecting_domains?: string[];
+  tag?: string;
+};
+
+export type CompetitorsDomainResponse = BaseResponse & {
+  tasks: Array<
+    BaseResponseTaskList & {
+      result: Array<{
+        se_type: string;
+        target: string;
+        location_code: number;
+        language_code: string;
+        total_count: number;
+        items_count: number;
+        items: Array<{
+          se_type: string;
+          domain: string;
+          avg_position: number;
+          sum_position: number;
+          intersections: number;
+          full_domain_metrics: {
+            organic: ItemMetric;
+            paid: ItemMetric;
+            featured_snippet: ItemMetric;
+            local_pack: ItemMetric;
+          };
+          metrics: {
+            organic: ItemMetric;
+            paid: ItemMetric;
+            featured_snippet: ItemMetric;
+            local_pack: ItemMetric;
+          };
+          competitor_metrics: {
+            organic: ItemMetric;
+            paid: ItemMetric;
+            featured_snippet: ItemMetric;
+            local_pack: ItemMetric;
+          };
+        }>;
+      }>;
+    }
+  >;
+};
+
+async function competitorsDomain(data: CompetitorsDomainRequest) {
+  const res = await fetch(apiURL + "/competitors-domain", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+  return (await res.json()) as CompetitorsDomainResponse;
+}
+
+export type DomainIntersectionRequest = {
+  target1: string;
+  target2: string;
+  location_name: string;
+  language_name: string;
+  intersection?: boolean;
+  item_types?: string[];
+  include_serp_info?: boolean;
+  include_clickstream_data?: boolean;
+  limit?: number;
+  offset?: number;
+  filters?: string[];
+  order_by?: string[];
+  tag?: string;
+};
+
+export type DomainIntersectionResponse = BaseResponse & {
+  tasks: Array<
+    BaseResponseTaskList & {
+      result: Array<{
+        se_type: string;
+        target1: string;
+        target2: string;
+        location_code: number;
+        language_code: string;
+        total_count: number;
+        items_count: number;
+        items: Array<{
+          se_type: string;
+          keyword_data: {
+            keyword: string;
+            location_code: number;
+            language_code: string;
+            keyword_info: KeywordInfo;
+            keyword_properties: KeywordProperties;
+            serp_info: SERPInfo;
+            avg_backlink_info: AvgBacklinkInfo;
+            search_intent_info: SearchIntentInfo;
+          };
+        }>;
+      }>;
+    }
+  >;
+};
+
+async function domainIntersection(data: DomainIntersectionRequest) {
+  const res = await fetch(apiURL + "/domain-intersection", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+  return (await res.json()) as DomainIntersectionResponse;
+}
+
+export type SubdomainRequest = {
+  target: string;
+  location_name: string;
+  language_name: string;
+  item_types?: string[];
+  include_clickstream_data?: boolean;
+  historical_serp_mode?: boolean;
+  filters?: string[];
+  order_by?: string[];
+  limit?: number;
+  offset?: number;
+  tag?: string;
+};
+
+export type SubdomainResponse = BaseResponse & {
+  tasks: Array<
+    BaseResponseTaskList & {
+      result: Array<{
+        se_type: string;
+        target: string;
+        location_code: number;
+        language_code: string;
+        total_count: number;
+        items_count: number;
+        items: Array<{
+          se_type: string;
+          subdomain: string;
+          metrics: {
+            organic: ItemMetric;
+            paid: ItemMetric;
+            featured_snippet: ItemMetric;
+            local_pack: ItemMetric;
+          };
+        }>;
+      }>;
+    }
+  >;
+};
+
+async function subdomains(data: SubdomainRequest) {
+  const res = await fetch(apiURL + "/subdomains", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+  return (await res.json()) as SubdomainResponse;
+}
+
+export type RelevantPagesRequest = {
+  target: string;
+  location_name: string;
+  language_name: string;
+  item_types?: string[];
+  limit?: number;
+  include_clickstream_data?: boolean;
+  offset?: number;
+  historical_serp_mode?: boolean;
+  filters?: string[];
+  order_by?: string[];
+  tag?: string;
+};
+
+export type RelevantPagesResponse = BaseResponse & {
+  tasks: Array<
+    BaseResponseTaskList & {
+      result: Array<{
+        se_type: string;
+        target: string;
+        location_code: number;
+        language_code: string;
+        total_count: number;
+        items_count: number;
+        items: Array<{
+          se_type: string;
+          page_address: string;
+          metrics: {
+            organic: ItemMetric;
+            paid: ItemMetric;
+            featured_snippet: ItemMetric;
+            local_pack: ItemMetric;
+          };
+        }>;
+      }>;
+    }
+  >;
+};
+
+async function relevantPages(data: RelevantPagesRequest) {
+  const res = await fetch(apiURL + "/relevant-pages", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+  return (await res.json()) as RelevantPagesResponse;
+}
+
+export type DomainRankRequest = {
+  target: string;
+  location_name: string;
+  language_name: string;
+  ignore_synonyms?: boolean;
+  limit?: number;
+  offset?: number;
+  tag?: string;
+};
+
+export type DomainRankResponse = BaseResponse & {
+  tasks: Array<
+    BaseResponseTaskList & {
+      result: Array<{
+        se_type: string;
+        target: string;
+        location_code: number;
+        language_code: string;
+        total_count: number;
+        items_count: number;
+        items: Array<{
+          se_type: string;
+          location_code: string;
+          metrics: {
+            organic: ItemMetric;
+            paid: ItemMetric;
+          };
+        }>;
+      }>;
+    }
+  >;
+};
+
+async function domainRank(data: DomainRankRequest) {
+  const res = await fetch(apiURL + "/domain-rank", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+  return (await res.json()) as DomainRankResponse;
+}
+
+export type BulkTrafficEstimationRequest = {
+  targets: string[];
+  location_name: string;
+  language_name: string;
+  item_types?: string[];
+  tag?: string;
+};
+
+export type BulkTrafficEstimationResponse = BaseResponse & {
+  tasks: Array<
+    BaseResponseTaskList & {
+      result: Array<{
+        se_type: string;
+        target: string;
+        location_code: number;
+        language_code: string;
+        total_count: number;
+        items_count: number;
+        items: Array<{
+          se_type: string;
+          target: string;
+          metrics: {
+            organic: {
+              etv: number;
+              count: number;
+            };
+            paid: {
+              etv: number;
+              count: number;
+            };
+            featured_snippet: {
+              etv: number;
+              count: number;
+            };
+            local_pack: {
+              etv: number;
+              count: number;
+            };
+          };
+        }>;
+      }>;
+    }
+  >;
+};
+
+async function bulkTrafficEstimation(data: BulkTrafficEstimationRequest) {
+  const res = await fetch(apiURL + "/bulk-traffic-estimation", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+  return (await res.json()) as BulkTrafficEstimationResponse;
+}
+
 export const API = {
   keywordsForSite,
   relatedKeywords,
@@ -468,4 +772,10 @@ export const API = {
   searchIntent,
   rankedKeywords,
   SERPCompetitors,
+  competitorsDomain,
+  domainIntersection,
+  subdomains,
+  relevantPages,
+  domainRank,
+  bulkTrafficEstimation,
 };
